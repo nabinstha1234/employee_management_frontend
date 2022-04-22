@@ -1,11 +1,11 @@
 import { useEffect, Suspense } from 'react';
-import { Route, RouteProps, useNavigate } from 'react-router-dom';
+import { Route, RouteProps, useHistory } from 'react-router-dom';
 import { Spinner } from 'components/molecules';
 
 interface IProps extends RouteProps {}
 
 export const PublicRoute = (props: IProps) => {
-  const navigate = useNavigate();
+  const navigate = useHistory();
 
   /*
   Later we need to access the user's token and check if it's valid.
@@ -14,7 +14,7 @@ export const PublicRoute = (props: IProps) => {
 
   useEffect(() => {
     if (token?.token) {
-      navigate('/');
+      navigate.push('/');
     }
   }, [navigate, token?.token]);
 

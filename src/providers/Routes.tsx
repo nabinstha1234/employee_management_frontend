@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes as Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Switch } from 'react-router-dom';
 
 import routes from 'config/routes';
 
@@ -16,8 +16,10 @@ export const Routes = () => {
   return (
     <Router>
       <Switch>
-        {/* <PublicRoute exact path={routes.login.path} component={routes.login.component} /> */}
-        <ProtectedRoute path={routes.home.path} element={routes.home.component} />
+        <React.Fragment>
+          {/* <PublicRoute exact path={routes.login.path} component={routes.login.component} /> */}
+          <ProtectedRoute path={routes.home.path} component={routes.home.component} />
+        </React.Fragment>
       </Switch>
     </Router>
   );
