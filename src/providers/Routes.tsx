@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Switch } from 'react-router-dom';
 
 import routes from 'config/routes';
 
-import { ProtectedRoute } from 'routes';
+import { ProtectedRoute, BaseRoute } from 'routes';
 
 /*
 ########################
@@ -19,6 +19,7 @@ export const Routes = () => {
         <React.Fragment>
           {/* <PublicRoute exact path={routes.login.path} component={routes.login.component} /> */}
           <ProtectedRoute path={routes.home.path} component={routes.home.component} />
+          <BaseRoute path={routes.page404.path} component={routes.page404.component} />
         </React.Fragment>
       </Switch>
     </Router>
