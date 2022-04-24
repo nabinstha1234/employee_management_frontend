@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 import { useState } from 'react';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { useForm, SubmitHandler, Controller, useWatch } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Link,
   Stack,
@@ -12,7 +13,7 @@ import {
   FormControlLabel,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import { yupResolver } from '@hookform/resolvers/yup';
+
 import { ReactIcon } from 'components/molecules';
 
 type Props = {};
@@ -34,17 +35,18 @@ const LoginForm = (props: Props) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors, isDirty },
-  } = useForm<IFormInput>({
+  const { control, handleSubmit } = useForm<IFormInput>({
+    defaultValues: {
+      email: '',
+      password: '',
+      rememberMe: false,
+    },
     mode: 'onChange',
     shouldFocusError: true,
     resolver: yupResolver(LoginSchema),
   });
 
-  const isCheckedRemberMe = useWatch({
+  const isCheckedRememberMe = useWatch({
     control,
     name: 'rememberMe',
   });
@@ -64,26 +66,31 @@ const LoginForm = (props: Props) => {
         <Controller
           control={control}
           name="email"
-          render={({ field }) => (
-            <TextField
-              fullWidth
-              autoComplete="username"
-              type="email"
-              label="Email address"
-              {...field}
-              error={Boolean(isDirty && errors.email)}
-              helperText={isDirty && errors.email}
-            />
-          )}
+          render={({ field: { onChange, value }, fieldState: { error } }) => {
+            return (
+              <TextField
+                fullWidth
+                autoComplete="username"
+                type="email"
+                label="Email address"
+                onChange={onChange}
+                value={value}
+                error={Boolean(error?.message)}
+                helperText={error?.message}
+              />
+            );
+          }}
         />
 
         <Controller
           control={control}
           name="password"
-          render={({ field }) => (
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
             <TextField
               fullWidth
               autoComplete="current-password"
+              onChange={onChange}
+              value={value}
               type={showPassword ? 'text' : 'password'}
               label="Password"
               InputProps={{
@@ -95,8 +102,8 @@ const LoginForm = (props: Props) => {
                   </InputAdornment>
                 ),
               }}
-              error={Boolean(isDirty && errors.password)}
-              helperText={isDirty && errors.password}
+              error={Boolean(error?.message)}
+              helperText={error?.message}
             />
           )}
         />
@@ -108,7 +115,7 @@ const LoginForm = (props: Props) => {
           name="rememberMe"
           render={({ field }) => (
             <FormControlLabel
-              control={<Checkbox checked={isCheckedRemberMe} />}
+              control={<Checkbox {...field} checked={isCheckedRememberMe} />}
               label="Remember me"
             />
           )}

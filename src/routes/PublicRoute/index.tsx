@@ -12,15 +12,15 @@ export const PublicRoute = (props: IProps) => {
   */
   const token = { token: '0557692809' };
 
-  useEffect(() => {
-    if (token?.token) {
-      navigate.push('/');
-    }
-  }, [navigate, token?.token]);
+  // useEffect(() => {
+  //   if (token?.token) {
+  //     navigate.push('/');
+  //   }
+  // }, [navigate, token?.token]);
 
-  if (token?.token) {
-    return null;
-  }
+  // if (token?.token) {
+  //   return null;
+  // }
 
   return (
     <Suspense fallback={<Spinner />}>
