@@ -5,3 +5,4 @@ export * from "./TextInput";
 export * from "./Logo";
 export * from "./SearchBar";
 export * from "./MenuPopOver";
+export * from "./ScrollBar"
