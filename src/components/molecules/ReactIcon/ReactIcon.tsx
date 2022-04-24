@@ -6,10 +6,14 @@ type Props = {
   icon: string;
   sx?: object;
   other?: object;
+  width?: number;
+  height?: number;
 };
 
-const ReactIcon = ({ icon, sx, other }: Props) => {
-  return <Box component={Icon} icon={icon} sx={{ ...sx }} {...other} />;
+const ReactIcon = ({ icon, width, height, sx, ...other }: Props) => {
+  return (
+    <Box component={Icon} icon={icon} sx={{ ...sx }} {...other} width={width} height={height} />
+  );
 };
 
 export default ReactIcon;

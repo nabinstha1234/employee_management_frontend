@@ -1,6 +1,7 @@
 import { useEffect, Suspense } from 'react';
 import { Route, RouteProps, useHistory } from 'react-router-dom';
 import { Spinner } from 'components/molecules';
+import { UnAuthLayout } from 'components/organisms';
 
 interface IProps extends RouteProps {}
 
@@ -24,6 +25,7 @@ export const PublicRoute = (props: IProps) => {
 
   return (
     <Suspense fallback={<Spinner />}>
+      <UnAuthLayout />
       <Route {...props} />
     </Suspense>
   );
