@@ -5,4 +5,6 @@ export * from "./TextInput";
 export * from "./Logo";
 export * from "./SearchBar";
 export * from "./MenuPopOver";
-export * from "./ScrollBar"
+export * from "./ScrollBar";
+export * from "./FormDialog";
+export * from "./MuiDatePicker";

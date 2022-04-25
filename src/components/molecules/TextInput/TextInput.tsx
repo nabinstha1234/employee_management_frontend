@@ -1,32 +1,36 @@
-import React from 'react';
 import { Controller } from 'react-hook-form';
 import { TextField } from '@mui/material';
 
 type Props = {
   control: any;
   name: string;
-  rules?: any;
-  isError?: boolean;
-  isDirty?: boolean;
-  error?: string;
+  type: string;
+  label: string;
+  variant?: 'standard' | 'outlined' | 'filled';
+  isMultiline?: boolean;
 };
 
-const TextInput = ({ control, name, rules, isError, isDirty, error }: Props) => {
+const TextInput = ({ control, name, type, label, isMultiline, variant = 'outlined' }: Props) => {
   return (
     <Controller
       control={control}
       name={name}
-      rules={rules}
-      render={({ field }) => (
-        <TextField
-          fullWidth
-          //   autoComplete="username"
-          //   type="email"
-          //   label="Email address"
-          error={Boolean(isDirty && isError)}
-          helperText={isError && error}
-        />
-      )}
+      render={({ field: { onChange, value }, fieldState: { error } }) => {
+        return (
+          <TextField
+            fullWidth
+            autoComplete={name}
+            type={type}
+            label={label}
+            onChange={onChange}
+            multiline={isMultiline}
+            variant={variant}
+            value={value}
+            error={Boolean(error?.message)}
+            helperText={error?.message}
+          />
+        );
+      }}
     />
   );
 };

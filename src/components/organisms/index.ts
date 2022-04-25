@@ -7,6 +7,6 @@ export * from "./LanguageProvider";
 export * from "./NavSection";
 export * from "./DashbordSidebar";
 export * from "./SearchNotFound";
-export * from "./UserListToolbar";
+export * from "./ListToolbar";
 export * from "./ListHead";
 export * from "./MoreMenu";

@@ -11,7 +11,7 @@ type Props = {
   onFilterName: (e: any) => void;
 };
 
-const UserListToolbar = ({ numSelected, filterName, onFilterName }: Props) => {
+const ListToolbar = ({ numSelected, filterName, onFilterName }: Props) => {
   return (
     <RootStyle
       sx={{
@@ -29,7 +29,7 @@ const UserListToolbar = ({ numSelected, filterName, onFilterName }: Props) => {
         <SearchStyle
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search user..."
+          placeholder="Search..."
           startAdornment={
             <InputAdornment position="start">
               <ReactIcon icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
@@ -55,4 +55,4 @@ const UserListToolbar = ({ numSelected, filterName, onFilterName }: Props) => {
   );
 };
 
-export default UserListToolbar;
+export default ListToolbar;

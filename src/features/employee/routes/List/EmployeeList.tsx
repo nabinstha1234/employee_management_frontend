@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
-import { Link as RouterLink } from 'react-router-dom';
 import {
   Card,
   Table,
@@ -19,8 +18,10 @@ import {
 } from '@mui/material';
 
 import { Label } from 'components/atoms';
-import { Page, ReactIcon, ScrollBar } from 'components/molecules';
-import { SearchNotFound, UserListToolbar, ListHead, MoreMenu } from 'components/organisms';
+import { Page, ReactIcon, ScrollBar, FormDialog } from 'components/molecules';
+import { SearchNotFound, ListToolbar, ListHead, MoreMenu } from 'components/organisms';
+
+import { AddEmployee } from '../Create';
 
 type Props = {};
 
@@ -71,6 +72,7 @@ const EmployeeList = (props: Props) => {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [showDialog, setShowDialog] = useState(false);
 
   const handleRequestSort = (event: any, property: any) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -132,8 +134,7 @@ const EmployeeList = (props: Props) => {
           </Typography>
           <Button
             variant="contained"
-            component={RouterLink}
-            to="#"
+            onClick={() => setShowDialog(true)}
             startIcon={<ReactIcon icon="eva:plus-fill" />}
           >
             New Employee
@@ -141,7 +142,7 @@ const EmployeeList = (props: Props) => {
         </Stack>
 
         <Card>
-          <UserListToolbar
+          <ListToolbar
             numSelected={selected.length}
             filterName={filterName}
             onFilterName={handleFilterByName}
@@ -237,6 +238,11 @@ const EmployeeList = (props: Props) => {
           />
         </Card>
       </Container>
+      {showDialog && (
+        <FormDialog show={showDialog} setShow={setShowDialog} title="Add New Employee">
+          <AddEmployee />
+        </FormDialog>
+      )}
     </Page>
   );
 };
