@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { sentenceCase } from 'change-case';
 import {
   Card,
@@ -21,7 +22,7 @@ import { Page, ReactIcon, ScrollBar, FormDialog } from 'components/molecules';
 import { SearchNotFound, ListToolbar, ListHead, MoreMenu } from 'components/organisms';
 import { applySortFilter, getComparator } from 'utils/sortFilter';
 
-import { AddEmployee } from '../Create';
+import { AddCompany } from '../Create';
 
 type Props = {};
 
@@ -36,7 +37,7 @@ const TABLE_HEAD = [
 
 const USERLIST: any = [];
 
-const EmployeeList = (props: Props) => {
+const CompanyList = (props: Props) => {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [selected, setSelected] = useState<number[]>([]);
@@ -44,6 +45,8 @@ const EmployeeList = (props: Props) => {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [showDialog, setShowDialog] = useState(false);
+
+  const history = useHistory();
 
   const handleRequestSort = (event: any, property: any) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -105,10 +108,12 @@ const EmployeeList = (props: Props) => {
           </Typography>
           <Button
             variant="contained"
-            onClick={() => setShowDialog(true)}
+            onClick={() => {
+              history.push('/company/add');
+            }}
             startIcon={<ReactIcon icon="eva:plus-fill" />}
           >
-            New Employee
+            New Company
           </Button>
         </Stack>
 
@@ -211,11 +216,11 @@ const EmployeeList = (props: Props) => {
       </Container>
       {showDialog && (
         <FormDialog show={showDialog} setShow={setShowDialog} title="Add New Employee">
-          <AddEmployee />
+          <AddCompany />
         </FormDialog>
       )}
     </Page>
   );
 };
 
-export default EmployeeList;
+export default CompanyList;

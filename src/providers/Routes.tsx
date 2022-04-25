@@ -19,6 +19,12 @@ export const Routes = () => {
         <PublicRoute exact path={routes.login.path} component={routes.login.component} />
         <ProtectedRoute exact path={routes.home.path} component={routes.home.component} />
         <ProtectedRoute exact path={routes.employee.path} component={routes.employee.component} />
+        <ProtectedRoute exact path={routes.company.path} component={routes.company.component} />
+        <ProtectedRoute
+          exact
+          path={routes.addCompany.path}
+          component={routes.addCompany.component}
+        />
         {/* <BaseRoute path={routes.page404.path} component={routes.page404.component} /> */}
       </Switch>
     </Router>
