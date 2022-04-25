@@ -16,11 +16,10 @@ export const Routes = () => {
   return (
     <Router>
       <Switch>
-        <React.Fragment>
-          <PublicRoute exact path={routes.login.path} component={routes.login.component} />
-          <ProtectedRoute path={routes.home.path} component={routes.home.component} />
-          {/* <BaseRoute path={routes.page404.path} component={routes.page404.component} /> */}
-        </React.Fragment>
+        <PublicRoute exact path={routes.login.path} component={routes.login.component} />
+        <ProtectedRoute exact path={routes.home.path} component={routes.home.component} />
+        <ProtectedRoute exact path={routes.employee.path} component={routes.employee.component} />
+        {/* <BaseRoute path={routes.page404.path} component={routes.page404.component} /> */}
       </Switch>
     </Router>
   );
