@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { useForm, SubmitHandler, Controller, useWatch } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import toast from "react-hot-toast";
 import {
   Link,
   Stack,
@@ -15,6 +16,10 @@ import {
 import { LoadingButton } from '@mui/lab';
 
 import { ReactIcon } from 'components/molecules';
+import AuthService from "features/auth/Api/authService"
+import {setToken} from "utils/token"
+import config from "config";
+import routes from 'config/routes';
 
 type Props = {};
 
@@ -55,9 +60,18 @@ const LoginForm = (props: Props) => {
     setShowPassword((show) => !show);
   };
 
-  const onSubmit: SubmitHandler<IFormInput> = () => {
+  const onSubmit: SubmitHandler<IFormInput> = (input:IFormInput) => {
     setIsSubmitting(true);
-    history.push('/dashboard');
+    AuthService.login(input).then((response)=>{
+        toast.success("Logged in successfully!")
+        const {data} = response;
+        if(data) {
+            setToken({name: config.tokenName, value: data.token})
+            history.push(routes.home.path)
+        }
+    }).catch((err)=>{
+        toast.error(err)
+    })
   };
 
   return (

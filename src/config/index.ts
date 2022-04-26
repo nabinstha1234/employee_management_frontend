@@ -2,7 +2,11 @@
    const config = {
     apiUrl: process.env.REACT_APP_API_URL,
     tokenName: 'token',
-    roles: {},
+    roles: {
+        SuperAdmin:"SuperAdmin",
+        Admin:"Admin",
+        Employee:"Employee"
+    },
     paging: {
       perPage: 25,
     },

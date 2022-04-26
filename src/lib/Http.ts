@@ -1,6 +1,7 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 
 import config from 'config';
+import {getToken} from "utils/token";
 
 export interface IHttp {
   get<T>(args: any): Promise<T>;
@@ -94,9 +95,8 @@ export default class Http implements IHttp {
     return headers;
   };
 
-  token = (): string | undefined => {
-    // let t: IToken | null = null;
-    return undefined;
+  token = (): string | null => {
+    return getToken({ name: config.tokenName});
   };
 
   changeHeaders = (headerConfig: any) => {
