@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
-import { sentenceCase } from 'change-case';
+import React, { useState,useEffect } from 'react';
 import {
   Card,
   Table,
   Stack,
-  Avatar,
   Button,
   Checkbox,
   TableRow,
@@ -15,26 +13,32 @@ import {
   TableContainer,
   TablePagination,
 } from '@mui/material';
+import moment from "moment";
 
-import { Label } from 'components/atoms';
 import { Page, ReactIcon, ScrollBar, FormDialog } from 'components/molecules';
 import { SearchNotFound, ListToolbar, ListHead, MoreMenu } from 'components/organisms';
 import { applySortFilter, getComparator } from 'utils/sortFilter';
+import {useAppDispatch, useAppSelector} from "app/hooks"
+import {listEmployee} from "features/employee/Api/employee"
+import {RootState} from "app/store";
 
 import { AddEmployee } from '../Create';
+
 
 type Props = {};
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'name', label: 'Employee Id', alignRight: false },
+  { id: 'employee_id', label: 'Employee Number', alignRight: false },
+  { id: 'department', label: "Department", alignRight: false },
+  { id: 'zip_code', label: 'Zip Code', alignRight: false },
+  { id: 'address', label: 'Address', alignRight: false },
+  { id: 'phone', label: 'Phone', alignRight: false },
+  { id: 'birthday', label: 'Birth Day', alignRight: false },
+  { id: 'remarks', label: 'Remarks', alignRight: false },
   { id: '' },
 ];
 
-const USERLIST: any = [];
 
 const EmployeeList = (props: Props) => {
   const [page, setPage] = useState(0);
@@ -44,6 +48,13 @@ const EmployeeList = (props: Props) => {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [showDialog, setShowDialog] = useState(false);
+  const { employees } = useAppSelector((state:RootState)=>state.employee)
+
+  const dispatch = useAppDispatch();
+
+  useEffect(()=>{
+    dispatch(listEmployee())
+  },[])
 
   const handleRequestSort = (event: any, property: any) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -53,7 +64,7 @@ const EmployeeList = (props: Props) => {
 
   const handleSelectAllClick = (event: any) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n: any) => n.name);
+      const newSelecteds = employees.map((n: any) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -91,9 +102,9 @@ const EmployeeList = (props: Props) => {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - employees.length) : 0;
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(employees, getComparator(order, orderBy), filterName);
 
   const isUserNotFound = filteredUsers.length === 0;
   return (
@@ -126,7 +137,7 @@ const EmployeeList = (props: Props) => {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
+                  rowCount={employees.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
@@ -135,8 +146,8 @@ const EmployeeList = (props: Props) => {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row: any) => {
-                      const { id, name, role, status, company, avatarUrl, isVerified } = row;
-                      const isItemSelected = selected.indexOf(name as never) !== -1;
+                      const { id, emp_number, department, zip_code,address, phone, birthday,remarks } = row;
+                      const isItemSelected = selected.indexOf(emp_number as never) !== -1;
 
                       return (
                         <TableRow
@@ -150,29 +161,23 @@ const EmployeeList = (props: Props) => {
                           <TableCell padding="checkbox">
                             <Checkbox
                               checked={isItemSelected}
-                              onChange={(event) => handleClick(event, name)}
+                              onChange={(event) => handleClick(event, employees)}
                             />
                           </TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              <Avatar alt={name} src={avatarUrl} />
                               <Typography variant="subtitle2" noWrap>
-                                {name}
+                                {id}
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{company}</TableCell>
-                          <TableCell align="left">{role}</TableCell>
-                          <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
-                          <TableCell align="left">
-                            <Label
-                              variant="ghost"
-                              color={(status === 'banned' && 'error') || 'success'}
-                            >
-                              {sentenceCase(status)}
-                            </Label>
-                          </TableCell>
-
+                          <TableCell align="left">{emp_number}</TableCell>
+                          <TableCell align="left">{department}</TableCell>
+                          <TableCell align="left">{zip_code}</TableCell>
+                          <TableCell align="left">{address}</TableCell>
+                          <TableCell align="left">{phone}</TableCell>
+                          <TableCell align="left">{birthday && moment(birthday).format("yyyy-mm-dd")}</TableCell>
+                          <TableCell align="left">{remarks}</TableCell>
                           <TableCell align="right">
                             <MoreMenu />
                           </TableCell>
@@ -201,7 +206,7 @@ const EmployeeList = (props: Props) => {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={employees.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
