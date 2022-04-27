@@ -22,7 +22,7 @@ type Props = {};
 
 const AddEmployee = (props: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { control, handleSubmit } = useForm<IFormInput>({
+  const { control, handleSubmit, setValue } = useForm<IFormInput>({
     defaultValues: {
       email: '',
       password: '',
@@ -51,7 +51,7 @@ const AddEmployee = (props: Props) => {
         <TextInput control={control} name="address" label="Address" type="text" />
         <TextInput control={control} name="zipCode" label="Zip Code" type="text" />
         <TextInput control={control} name="remarks" isMultiline label="Remarks" type="text" />
-        <MuiDatePicker control={control} type="text" name="dateOfBirth" label="Date of Birth" />
+        <MuiDatePicker setValue={setValue} control={control} type="text" name="dateOfBirth" label="Date of Birth" />
         <LoadingButton
           fullWidth
           size="large"

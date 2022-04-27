@@ -8,3 +8,4 @@ export * from "./MenuPopOver";
 export * from "./ScrollBar";
 export * from "./FormDialog";
 export * from "./MuiDatePicker";
+export * from "./MuiSelect";

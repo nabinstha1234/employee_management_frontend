@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import {getCurrentUser} from "../Api/auth"
+import {getCurrentUser, logout} from "../Api/auth"
 
 export interface IUser{
     id:number;
@@ -34,6 +34,7 @@ export const authSlice=createSlice({
         }
     },
     extraReducers:(builder)=> {
+        // get Current users
         builder.addCase(getCurrentUser.pending,(state:IAuthState)=>{
             state.loading= false;
             state.error=null;
@@ -48,6 +49,23 @@ export const authSlice=createSlice({
             state.loading=false;
             state.error=null;
         })
+
+        // logout user
+        builder.addCase(logout.pending,(state:IAuthState)=>{
+            state.loading= false;
+            state.error=null;
+        })
+        builder.addCase(logout.fulfilled,(state:IAuthState, action)=>{
+            state.userResponse= {};
+            state.loading= false;
+            state.error=null;
+        })
+
+        builder.addCase(logout.rejected,(state:IAuthState)=>{
+            state.loading=false;
+            state.error=null;
+        })
+
     }
 })
 

@@ -22,10 +22,12 @@ export const Routes = () => {
         <ProtectedRoute roles={allRoles} exact path={routes.employee.path} Component={routes.employee.component} />
         <ProtectedRoute roles={[SuperAdmin]} exact path={routes.company.path} Component={routes.company.component} />
         <ProtectedRoute
+            roles={[SuperAdmin]}
           exact
           path={routes.addCompany.path}
           Component={routes.addCompany.component}
         />
+          <ProtectedRoute exact path={routes.users.path}  Component={routes.users.component} roles={[SuperAdmin]}/>
         {/* <BaseRoute path={routes.page404.path} component={routes.page404.component} /> */}
       </Switch>
     </Router>

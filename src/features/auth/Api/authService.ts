@@ -17,4 +17,10 @@ export default class AuthService {
         })
     }
 
+    static logout(){
+        return http.post<any>({
+            endpoint:"/auth/logout"
+        })
+    }
+
 }

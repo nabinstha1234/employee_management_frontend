@@ -1,7 +1,8 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 
 import config from 'config';
-import {getToken} from "utils/token";
+import routes from "config/routes";
+import {getToken, removeToken} from "utils/token";
 
 export interface IHttp {
   get<T>(args: any): Promise<T>;
@@ -66,6 +67,10 @@ export default class Http implements IHttp {
   private handleError = (err: any): Promise<IError> => {
     if (err.response) {
       const { status, data, headers } = err.response;
+      if (status === 401) {
+        removeToken({ name: config.tokenName });
+        window.location.href = routes.login.path;
+      }
 
       return Promise.reject({
         status,

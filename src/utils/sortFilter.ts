@@ -26,7 +26,7 @@ export const applySortFilter = (array: any, comparator: any, query: any) => {
       return a[1] - b[1];
     });
     if (query) {
-      return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+      return filter(array, (_user) => _user.hasOwnProperty("name")?_user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1:_user.firstname.toLowerCase().indexOf(query.toLowerCase()) !== -1);
     }
     return stabilizedThis.map((el: any) => el[0]);
   };

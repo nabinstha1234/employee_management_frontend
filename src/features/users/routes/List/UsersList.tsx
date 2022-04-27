@@ -1,11 +1,9 @@
 import { useState,useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import { sentenceCase } from 'change-case';
+import moment from "moment";
 import {
   Card,
   Table,
   Stack,
-  Avatar,
   Button,
   Checkbox,
   TableRow,
@@ -19,29 +17,26 @@ import {
 
 import {RootState} from "app/store";
 import {useAppSelector, useAppDispatch} from "app/hooks"
-import { Label } from 'components/atoms';
 import { Page, ReactIcon, ScrollBar, FormDialog } from 'components/molecules';
 import { SearchNotFound, ListToolbar, ListHead, MoreMenu } from 'components/organisms';
 import { applySortFilter, getComparator } from 'utils/sortFilter';
 
-import { AddCompany } from '../Create';
-import {listCompanies} from "features/company/Api/company"
+import { AddUser } from '../Create';
+import {listUsers} from "features/users/Api/users"
 
 
 type Props = {};
 
 const TABLE_HEAD = [
-  { id: 'id', label: 'Company ID', alignRight: false },
-  { id: 'name', label: 'Company Name', alignRight: false },
-  { id: 'address', label: 'Address', alignRight: false },
+  { id: 'id', label: 'User Id', alignRight: false },
+  { id: 'name', label: 'Full Name', alignRight: false },
   { id: 'email', label: 'Email', alignRight: false },
-  { id: 'phone', label: 'Phone', alignRight: false },
-  { id: 'date_of_establishment',label: "Date Of Establishment", alignRight: false },
-  { id: 'remarks',label: "Remarks", alignRight: false },
+  { id: 'role', label: 'Role', alignRight: false },
+  { id: 'lastlogin',label: "Last Login", alignRight: false },
   {id:""}
 ];
 
-const CompanyList = (props: Props) => {
+const UsersList = (props: Props) => {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [selected, setSelected] = useState<number[]>([]);
@@ -49,15 +44,14 @@ const CompanyList = (props: Props) => {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [showDialog, setShowDialog] = useState(false);
-  const { companies } = useAppSelector((state:RootState)=>state.company)
-  const history = useHistory();
+  const { users } = useAppSelector((state:RootState)=>state.user)
   const dispatch = useAppDispatch()
 
   useEffect(()=>{
      const controller = new AbortController();
-     dispatch(listCompanies())
+     dispatch(listUsers())
      return controller.abort()
-  },[])
+  },[dispatch])
 
   const handleRequestSort = (event: any, property: any) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -67,7 +61,7 @@ const CompanyList = (props: Props) => {
 
   const handleSelectAllClick = (event: any) => {
     if (event.target.checked) {
-      const newSelecteds = companies.map((n: any) => n.name);
+      const newSelecteds = users.map((n: any) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -105,27 +99,27 @@ const CompanyList = (props: Props) => {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - companies.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
 
-  const filteredUsers = applySortFilter(companies, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName);
 
   const isUserNotFound = filteredUsers.length === 0;
 
   return (
-    <Page title="Employee">
+    <Page title="Users">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Companies
+            Users
           </Typography>
           <Button
             variant="contained"
             onClick={() => {
-              history.push('/company/add');
+              setShowDialog(true)
             }}
             startIcon={<ReactIcon icon="eva:plus-fill" />}
           >
-            New Company
+            New User
           </Button>
         </Stack>
 
@@ -143,7 +137,7 @@ const CompanyList = (props: Props) => {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={companies.length}
+                  rowCount={users.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
@@ -152,8 +146,8 @@ const CompanyList = (props: Props) => {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row: any) => {
-                      const { id, name,address,email, phone, date_of_establishment,remarks } = row;
-                      const isItemSelected = selected.indexOf(name as never) !== -1;
+                      const { id, firstname, lastname, middlename, lastlogin, email,role} = row;
+                      const isItemSelected = selected.indexOf(firstname as never) !== -1;
 
                       return (
                         <TableRow
@@ -167,23 +161,20 @@ const CompanyList = (props: Props) => {
                           <TableCell padding="checkbox">
                             <Checkbox
                               checked={isItemSelected}
-                              onChange={(event) => handleClick(event, name)}
+                              onChange={(event) => handleClick(event, firstname)}
                             />
                           </TableCell>
                           <TableCell align="left">{id}</TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
                               <Typography variant="subtitle2" noWrap>
-                                {name}
+                                {firstname} {middlename} {lastname}
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{address}</TableCell>
-                          <TableCell align="left">{phone}</TableCell>
                           <TableCell align="left">{email}</TableCell>
-                          <TableCell align="left">{phone}</TableCell>
-                          <TableCell align="left">{date_of_establishment}</TableCell>
-                          <TableCell align="left">{remarks}</TableCell>
+                          <TableCell align="left">{role}</TableCell>
+                          <TableCell align="left">{moment(lastlogin).format("yyyy-mm-dd")}</TableCell>
                           <TableCell align="right">
                             <MoreMenu />
                           </TableCell>
@@ -212,7 +203,7 @@ const CompanyList = (props: Props) => {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={companies.length}
+            count={users.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -221,12 +212,12 @@ const CompanyList = (props: Props) => {
         </Card>
       </Container>
       {showDialog && (
-        <FormDialog show={showDialog} setShow={setShowDialog} title="Add New Employee">
-          <AddCompany />
+        <FormDialog show={showDialog} setShow={setShowDialog} title="Add New User">
+          <AddUser setShowDialog={setShowDialog} />
         </FormDialog>
       )}
     </Page>
   );
 };
 
-export default CompanyList;
+export default UsersList;

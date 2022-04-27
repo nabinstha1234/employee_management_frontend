@@ -10,9 +10,10 @@ type Props = {
   label: string;
   name: string;
   type: string;
+  setValue:Function
 };
 
-const MuiDatePicker = ({ control, label, name, type }: Props) => {
+const MuiDatePicker = ({ control, label, name, type, setValue:hookFormSetValue }: Props) => {
   const [value, setValue] = useState<Date | null>(new Date());
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -22,12 +23,14 @@ const MuiDatePicker = ({ control, label, name, type }: Props) => {
         minDate={new Date('2017-01-01')}
         onChange={(newValue) => {
           setValue(newValue);
+          hookFormSetValue(name, value, { shouldValidate: true, shouldDirty: true });
+
         }}
         renderInput={(params) => (
           <Controller
             control={control}
             name={name}
-            render={({ field: { onChange, value }, fieldState: { error } }) => {
+            render={({fieldState: { error } }) => {
               return (
                 <TextField
                   fullWidth
@@ -35,7 +38,6 @@ const MuiDatePicker = ({ control, label, name, type }: Props) => {
                   autoComplete={name}
                   type={type}
                   label={label}
-                  onChange={onChange}
                   value={value}
                   error={Boolean(error?.message)}
                   helperText={error?.message}

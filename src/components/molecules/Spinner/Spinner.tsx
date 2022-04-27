@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import {Box} from "@mui/material"
 
 const sizes = {
     sm: 'h4',
@@ -20,7 +21,7 @@ const variants = {
   
   export const Spinner = ({ size = 'md', variant = 'primary', className = '' }: SpinnerProps) => {
     return (
-      <>
+      <Box height={5}>
         <svg
           className={clsx('animate-spin', sizes[size], variants[variant], className)}
           xmlns="http://www.w3.org/2000/svg"
@@ -43,6 +44,6 @@ const variants = {
           ></path>
         </svg>
         <span className="sr-only">Loading</span>
-      </>
+      </Box>
     );
   };

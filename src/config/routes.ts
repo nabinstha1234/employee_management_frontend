@@ -6,6 +6,7 @@ const {Login} = lazyImport(()=> import("features/auth"),"Login");
 const {EmployeeList} = lazyImport(()=> import("features/employee"),"EmployeeList");
 const {CompanyList} = lazyImport(()=> import("features/company"),"CompanyList");
 const {AddCompany} = lazyImport(()=> import("features/company"),"AddCompany");
+const {UsersList} = lazyImport(()=> import("features/users"),"UsersList")
 
 const routes = {
   home: {
@@ -27,6 +28,10 @@ const routes = {
   addCompany:{
     path:'/company/add',
     component:AddCompany
+  },
+  users:{
+    path:"/users",
+    component:UsersList
   },
   page404:{
     path:"*",
