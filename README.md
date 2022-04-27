@@ -2,6 +2,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
+First create .env file from .env.examples and replace API endpoint with your own endpoint.
+
 In the project directory, you can run:
 
 ### `npm start`
