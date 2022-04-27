@@ -37,6 +37,14 @@ export const ProtectedRoute = ({Component, exact, path, roles}: IProps) => {
         // eslint-disable-next-line
     }, [isAuthed, history]);
 
+    useEffect(()=>{
+        if(isAuthed && !isEmpty(userResponse)){
+            if(!userResponse.isemailverified){
+                history.push(routes.passwordChange.path)
+            }
+        }
+    },[isAuthed,history,userResponse])
+
     if (isAuthed && isEmpty(userResponse)) {
         return null;
     }

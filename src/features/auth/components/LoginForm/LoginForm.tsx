@@ -70,8 +70,9 @@ const LoginForm = (props: Props) => {
             history.push(routes.home.path)
         }
     }).catch((err)=>{
-        toast.error(err)
+        toast.error("Email and password do not match.")
     })
+   setIsSubmitting(false)
   };
 
   return (

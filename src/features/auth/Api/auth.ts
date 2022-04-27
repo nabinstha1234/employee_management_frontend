@@ -17,3 +17,8 @@ export const logout = createAsyncThunk("auth/logout",async()=>{
     const response = await AuthService.logout();
     return response
 })
+
+export const changePassword= createAsyncThunk("auth/change-password", async (args:any)=>{
+    const response = await AuthService.changePassword(args);
+    return response
+})

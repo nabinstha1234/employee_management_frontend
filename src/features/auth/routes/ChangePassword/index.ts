@@ -1,1 +1,5 @@
-export * from "./ChangePassword"
+import ChangePassword from "./ChangePassword";
+
+export {
+    ChangePassword
+}

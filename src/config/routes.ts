@@ -6,7 +6,8 @@ const {Login} = lazyImport(()=> import("features/auth"),"Login");
 const {EmployeeList} = lazyImport(()=> import("features/employee"),"EmployeeList");
 const {CompanyList} = lazyImport(()=> import("features/company"),"CompanyList");
 const {AddCompany} = lazyImport(()=> import("features/company"),"AddCompany");
-const {UsersList} = lazyImport(()=> import("features/users"),"UsersList")
+const {UsersList} = lazyImport(()=> import("features/users"),"UsersList");
+const {ChangePassword} = lazyImport(()=> import("features/auth"),"ChangePassword");
 
 const routes = {
   home: {
@@ -32,6 +33,10 @@ const routes = {
   users:{
     path:"/users",
     component:UsersList
+  },
+  passwordChange:{
+    path:"/password-change",
+    component:ChangePassword
   },
   page404:{
     path:"*",

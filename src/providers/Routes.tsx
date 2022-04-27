@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
 
 import routes from 'config/routes';
-import { ProtectedRoute, PublicRoute } from 'routes';
+import {BaseRoute, ProtectedRoute, PublicRoute} from 'routes';
 import config from "config";
 
 const { roles:{
@@ -27,6 +27,7 @@ export const Routes = () => {
           path={routes.addCompany.path}
           Component={routes.addCompany.component}
         />
+          <BaseRoute exact path={routes.passwordChange.path} component={routes.passwordChange.component} />
           <ProtectedRoute exact path={routes.users.path}  Component={routes.users.component} roles={[SuperAdmin]}/>
         {/* <BaseRoute path={routes.page404.path} component={routes.page404.component} /> */}
       </Switch>
