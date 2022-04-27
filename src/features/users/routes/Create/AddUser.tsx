@@ -4,106 +4,108 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import {useHistory} from "react-router-dom"
-import toast from "react-hot-toast";
+import toast from 'react-hot-toast';
 
-import { TextInput,MuiSelect } from 'components/molecules';
-import {useAppDispatch, useAppSelector} from "app/hooks";
-import {createUser} from "../../Api/users"
+import { TextInput, MuiSelect } from 'components/molecules';
+import { useAppDispatch, useAppSelector } from 'app/hooks';
+import { createUser } from '../../Api/users';
 
-import routes from "config/routes";
-import config from "config";
-import {RootState} from "app/store";
-import {ICompany} from "../../../company/Slice/CompanySlice";
-import {listCompanies} from "features/company/Api/company"
+import config from 'config';
+import { RootState } from 'app/store';
+import { ICompany } from '../../../company/Slice/CompanySlice';
+import { listCompanies } from 'features/company/Api/company';
 
 interface IFormInput {
   firstname: string;
   middlename: string;
-  lastname:string;
+  lastname: string;
   email: string;
-  role:string;
-  company:number;
+  role: string;
+  company: number;
 }
 
 const CreateUserSchema = Yup.object().shape({
-  firstname:Yup.string().required("First name is required"),
-  lastname:Yup.string().required("Lasr name is required"),
+  firstname: Yup.string().required('First name is required'),
+  lastname: Yup.string().required('Lasr name is required'),
   email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-  role: Yup.string().required("Role is required"),
-  company: Yup.number().required("Company is reuired")
+  role: Yup.string().required('Role is required'),
+  company: Yup.number().required('Company is reuired'),
 });
 
 type Props = {
-  setShowDialog:Function;
+  setShowDialog: Function;
+  defaultValues: {};
 };
 
-const Roles =[
+const Roles = [
   {
-    label:"Super Admin",
-    value:config.roles.SuperAdmin
+    label: 'Super Admin',
+    value: config.roles.SuperAdmin,
   },
   {
-    label:"Admin",
-    value:config.roles.Admin
+    label: 'Admin',
+    value: config.roles.Admin,
   },
   {
-    label:"Employee",
-    value: config.roles.Employee
-  }
-]
+    label: 'Employee',
+    value: config.roles.Employee,
+  },
+];
 
-const AddUser = ({setShowDialog}: Props) => {
+const AddUser = ({ setShowDialog, defaultValues }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { control, handleSubmit} = useForm<IFormInput>({
+  const { control, handleSubmit } = useForm<IFormInput>({
+    defaultValues: defaultValues,
     mode: 'onChange',
     shouldFocusError: true,
     resolver: yupResolver(CreateUserSchema),
   });
-  const dispatch = useAppDispatch()
-  const history = useHistory()
+  const dispatch = useAppDispatch();
 
-  const { companies } = useAppSelector((state:RootState)=> state.company)
+  const { companies } = useAppSelector((state: RootState) => state.company);
 
-  useEffect(()=>{
-    dispatch(listCompanies())
-  },[dispatch])
+  useEffect(() => {
+    dispatch(listCompanies());
+  }, [dispatch]);
 
-  const onSubmit: SubmitHandler<IFormInput> = async (data:IFormInput) => {
+  const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput) => {
     setIsSubmitting(true);
-    dispatch(createUser(data)).unwrap().then((response)=>{
-        toast.success("User Created Successfully")
-        setShowDialog(false)
-    }).catch(()=>{
-      toast.error("Something went wrong!")
-    })
-    setIsSubmitting(false)
+    dispatch(createUser(data))
+      .unwrap()
+      .then((response) => {
+        toast.success('User Created Successfully');
+        setShowDialog(false);
+      })
+      .catch(() => {
+        toast.error('Something went wrong!');
+      });
+    setIsSubmitting(false);
   };
 
-  const companiesList = companies.map((item:ICompany)=>({label:item.name,value:item.id}))
+  const companiesList = companies.map((item: ICompany) => ({ label: item.name, value: item.id }));
 
   return (
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Stack spacing={3}>
-              <Stack direction="row" spacing={2}>
-                <TextInput control={control} name="firstname" label="First Name" type="text" />
-                <TextInput control={control} name="middlename" label="Middle Name" type="text" />
-                <TextInput control={control} name="lastname" label="Last Name" type="text" />
-              </Stack>
-              <TextInput control={control} name="email" label="Email" type="email" />
-              <MuiSelect control={control} name="role" label="Role" items={Roles}/>
-              <MuiSelect control={control} name="company" label="Company" items={companiesList}/>
-              <LoadingButton
-                fullWidth
-                size="large"
-                type="submit"
-                variant="contained"
-                loading={isSubmitting}
-              >
-                Submit
-              </LoadingButton>
-            </Stack>
-          </form>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Stack spacing={3}>
+        <Stack direction="row" spacing={2}>
+          <TextInput control={control} name="firstname" label="First Name" type="text" />
+          <TextInput control={control} name="middlename" label="Middle Name" type="text" />
+          <TextInput control={control} name="lastname" label="Last Name" type="text" />
+        </Stack>
+        <TextInput control={control} name="email" label="Email" type="email" />
+        <MuiSelect control={control} name="role" label="Role" items={Roles} />
+        <MuiSelect control={control} name="company" label="Company" items={companiesList} />
+        <LoadingButton
+          fullWidth
+          size="large"
+          type="submit"
+          variant="contained"
+          loading={isSubmitting}
+        >
+          Submit
+        </LoadingButton>
+      </Stack>
+    </form>
   );
 };
 

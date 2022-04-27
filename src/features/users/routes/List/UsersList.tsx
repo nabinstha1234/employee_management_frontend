@@ -1,29 +1,29 @@
-import { useState,useEffect } from 'react';
-import moment from "moment";
+import { useEffect, useState } from 'react';
+import moment from 'moment';
 import {
-  Card,
-  Table,
-  Stack,
   Button,
+  Card,
   Checkbox,
-  TableRow,
+  Container,
+  Stack,
+  Table,
   TableBody,
   TableCell,
-  Container,
-  Typography,
   TableContainer,
   TablePagination,
+  TableRow,
+  Typography,
 } from '@mui/material';
 
-import {RootState} from "app/store";
-import {useAppSelector, useAppDispatch} from "app/hooks"
-import { Page, ReactIcon, ScrollBar, FormDialog } from 'components/molecules';
-import { SearchNotFound, ListToolbar, ListHead, MoreMenu } from 'components/organisms';
+import { RootState } from 'app/store';
+import { useAppDispatch, useAppSelector } from 'app/hooks';
+import { FormDialog, Page, ReactIcon, ScrollBar } from 'components/molecules';
+import { ListHead, ListToolbar, MoreMenu, SearchNotFound } from 'components/organisms';
 import { applySortFilter, getComparator } from 'utils/sortFilter';
 
 import { AddUser } from '../Create';
-import {listUsers} from "features/users/Api/users"
-
+import { listUsers } from 'features/users/Api/users';
+import config from '../../../../config';
 
 type Props = {};
 
@@ -32,8 +32,8 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Full Name', alignRight: false },
   { id: 'email', label: 'Email', alignRight: false },
   { id: 'role', label: 'Role', alignRight: false },
-  { id: 'lastlogin',label: "Last Login", alignRight: false },
-  {id:""}
+  { id: 'lastlogin', label: 'Last Login', alignRight: false },
+  { id: '' },
 ];
 
 const UsersList = (props: Props) => {
@@ -44,14 +44,16 @@ const UsersList = (props: Props) => {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [showDialog, setShowDialog] = useState(false);
-  const { users } = useAppSelector((state:RootState)=>state.user)
-  const dispatch = useAppDispatch()
+  const [defaultValues, setDefaultValues] = useState({});
+  const [isEditing, setIsEditing] = useState(false);
+  const { users } = useAppSelector((state: RootState) => state.user);
+  const dispatch = useAppDispatch();
 
-  useEffect(()=>{
-     const controller = new AbortController();
-     dispatch(listUsers())
-     return controller.abort()
-  },[dispatch])
+  useEffect(() => {
+    const controller = new AbortController();
+    dispatch(listUsers());
+    return controller.abort();
+  }, [dispatch]);
 
   const handleRequestSort = (event: any, property: any) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -105,6 +107,25 @@ const UsersList = (props: Props) => {
 
   const isUserNotFound = filteredUsers.length === 0;
 
+  const handleMenuItemClick = (id: number, type: string) => {
+    if (type === config.menuType.edit) {
+      const user = users.find((item: any) => item.id === id);
+      const { firstname, middlename, lastname, email, role, company } = user;
+      setDefaultValues({
+        firstname,
+        middlename,
+        lastname,
+        email,
+        role,
+        company,
+      });
+      setIsEditing(true);
+      setShowDialog(true);
+    }
+
+    if (type === config.menuType.delete) {
+    }
+  };
   return (
     <Page title="Users">
       <Container>
@@ -115,7 +136,7 @@ const UsersList = (props: Props) => {
           <Button
             variant="contained"
             onClick={() => {
-              setShowDialog(true)
+              setShowDialog(true);
             }}
             startIcon={<ReactIcon icon="eva:plus-fill" />}
           >
@@ -146,7 +167,7 @@ const UsersList = (props: Props) => {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row: any) => {
-                      const { id, firstname, lastname, middlename, lastlogin, email,role} = row;
+                      const { id, firstname, lastname, middlename, lastlogin, email, role } = row;
                       const isItemSelected = selected.indexOf(firstname as never) !== -1;
 
                       return (
@@ -174,9 +195,11 @@ const UsersList = (props: Props) => {
                           </TableCell>
                           <TableCell align="left">{email}</TableCell>
                           <TableCell align="left">{role}</TableCell>
-                          <TableCell align="left">{moment(lastlogin).format("yyyy-mm-dd")}</TableCell>
+                          <TableCell align="left">
+                            {moment(lastlogin).format('yyyy-mm-DD')}
+                          </TableCell>
                           <TableCell align="right">
-                            <MoreMenu />
+                            <MoreMenu id={id} onClick={handleMenuItemClick} />
                           </TableCell>
                         </TableRow>
                       );
@@ -213,7 +236,7 @@ const UsersList = (props: Props) => {
       </Container>
       {showDialog && (
         <FormDialog show={showDialog} setShow={setShowDialog} title="Add New User">
-          <AddUser setShowDialog={setShowDialog} />
+          <AddUser defaultValues={isEditing ? defaultValues : {}} setShowDialog={setShowDialog} />
         </FormDialog>
       )}
     </Page>

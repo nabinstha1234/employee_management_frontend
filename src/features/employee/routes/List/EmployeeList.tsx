@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   Table,
@@ -13,24 +13,24 @@ import {
   TableContainer,
   TablePagination,
 } from '@mui/material';
-import moment from "moment";
+import moment from 'moment';
 
 import { Page, ReactIcon, ScrollBar, FormDialog } from 'components/molecules';
 import { SearchNotFound, ListToolbar, ListHead, MoreMenu } from 'components/organisms';
 import { applySortFilter, getComparator } from 'utils/sortFilter';
-import {useAppDispatch, useAppSelector} from "app/hooks"
-import {listEmployee} from "features/employee/Api/employee"
-import {RootState} from "app/store";
+import { useAppDispatch, useAppSelector } from 'app/hooks';
+import { listEmployee } from 'features/employee/Api/employee';
+import { RootState } from 'app/store';
 
 import { AddEmployee } from '../Create';
-
+import config from '../../../../config';
 
 type Props = {};
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Employee Id', alignRight: false },
   { id: 'employee_id', label: 'Employee Number', alignRight: false },
-  { id: 'department', label: "Department", alignRight: false },
+  { id: 'department', label: 'Department', alignRight: false },
   { id: 'zip_code', label: 'Zip Code', alignRight: false },
   { id: 'address', label: 'Address', alignRight: false },
   { id: 'phone', label: 'Phone', alignRight: false },
@@ -38,7 +38,6 @@ const TABLE_HEAD = [
   { id: 'remarks', label: 'Remarks', alignRight: false },
   { id: '' },
 ];
-
 
 const EmployeeList = (props: Props) => {
   const [page, setPage] = useState(0);
@@ -48,13 +47,13 @@ const EmployeeList = (props: Props) => {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [showDialog, setShowDialog] = useState(false);
-  const { employees } = useAppSelector((state:RootState)=>state.employee)
+  const { employees } = useAppSelector((state: RootState) => state.employee);
 
   const dispatch = useAppDispatch();
 
-  useEffect(()=>{
-    dispatch(listEmployee())
-  },[])
+  useEffect(() => {
+    dispatch(listEmployee());
+  }, [dispatch]);
 
   const handleRequestSort = (event: any, property: any) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -107,6 +106,14 @@ const EmployeeList = (props: Props) => {
   const filteredUsers = applySortFilter(employees, getComparator(order, orderBy), filterName);
 
   const isUserNotFound = filteredUsers.length === 0;
+
+  const handleMenuItemClick = (id: number, type: string) => {
+    if (type === config.menuType.edit) {
+    }
+    if (type === config.menuType.delete) {
+    }
+  };
+
   return (
     <Page title="Employee">
       <Container>
@@ -146,7 +153,16 @@ const EmployeeList = (props: Props) => {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row: any) => {
-                      const { id, emp_number, department, zip_code,address, phone, birthday,remarks } = row;
+                      const {
+                        id,
+                        emp_number,
+                        department,
+                        zip_code,
+                        address,
+                        phone,
+                        birthday,
+                        remarks,
+                      } = row;
                       const isItemSelected = selected.indexOf(emp_number as never) !== -1;
 
                       return (
@@ -176,10 +192,12 @@ const EmployeeList = (props: Props) => {
                           <TableCell align="left">{zip_code}</TableCell>
                           <TableCell align="left">{address}</TableCell>
                           <TableCell align="left">{phone}</TableCell>
-                          <TableCell align="left">{birthday && moment(birthday).format("yyyy-mm-dd")}</TableCell>
+                          <TableCell align="left">
+                            {birthday && moment(birthday).format('yyyy-mm-dd')}
+                          </TableCell>
                           <TableCell align="left">{remarks}</TableCell>
                           <TableCell align="right">
-                            <MoreMenu />
+                            <MoreMenu onClick={handleMenuItemClick} id={id} />
                           </TableCell>
                         </TableRow>
                       );

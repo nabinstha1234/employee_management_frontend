@@ -3,12 +3,21 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/material';
 
 import { ReactIcon } from 'components/molecules';
+import config from "config";
 
-type Props = {};
+type Props = {
+    id:number;
+    onClick:Function;
+};
 
-const MoreMenu = (props: Props) => {
+const MoreMenu = ({id, onClick}: Props) => {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
+
+  const onClickItem=(id:number, type:string)=>{
+      setIsOpen(false)
+      onClick(id,type)
+  }
 
   return (
     <>
@@ -26,14 +35,14 @@ const MoreMenu = (props: Props) => {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem sx={{ color: 'text.secondary' }}>
+        <MenuItem sx={{ color: 'text.secondary' }} onClick={()=> onClickItem(id, config.menuType.delete)} >
           <ListItemIcon>
             <ReactIcon icon="eva:trash-2-outline" width={24} height={24} />
           </ListItemIcon>
           <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
-        <MenuItem component={RouterLink} to="#" sx={{ color: 'text.secondary' }}>
+        <MenuItem component={RouterLink} to="#" sx={{ color: 'text.secondary' }} onClick={()=> onClickItem(id, config.menuType.edit)} >
           <ListItemIcon>
             <ReactIcon icon="eva:edit-fill" width={24} height={24} />
           </ListItemIcon>

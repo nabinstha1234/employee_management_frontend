@@ -15,6 +15,10 @@
       female: 'FEMALE',
       other: 'OTHER',
     },
+   menuType:{
+        edit:"edit",
+        delete:"delete"
+   }
   };
   
   export default config;

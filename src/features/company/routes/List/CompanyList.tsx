@@ -1,11 +1,9 @@
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { sentenceCase } from 'change-case';
 import {
   Card,
   Table,
   Stack,
-  Avatar,
   Button,
   Checkbox,
   TableRow,
@@ -17,16 +15,15 @@ import {
   TablePagination,
 } from '@mui/material';
 
-import {RootState} from "app/store";
-import {useAppSelector, useAppDispatch} from "app/hooks"
-import { Label } from 'components/atoms';
+import { RootState } from 'app/store';
+import { useAppSelector, useAppDispatch } from 'app/hooks';
 import { Page, ReactIcon, ScrollBar, FormDialog } from 'components/molecules';
 import { SearchNotFound, ListToolbar, ListHead, MoreMenu } from 'components/organisms';
 import { applySortFilter, getComparator } from 'utils/sortFilter';
 
 import { AddCompany } from '../Create';
-import {listCompanies} from "features/company/Api/company"
-
+import { listCompanies } from 'features/company/Api/company';
+import config from 'config';
 
 type Props = {};
 
@@ -36,9 +33,9 @@ const TABLE_HEAD = [
   { id: 'address', label: 'Address', alignRight: false },
   { id: 'email', label: 'Email', alignRight: false },
   { id: 'phone', label: 'Phone', alignRight: false },
-  { id: 'date_of_establishment',label: "Date Of Establishment", alignRight: false },
-  { id: 'remarks',label: "Remarks", alignRight: false },
-  {id:""}
+  { id: 'date_of_establishment', label: 'Date Of Establishment', alignRight: false },
+  { id: 'remarks', label: 'Remarks', alignRight: false },
+  { id: '' },
 ];
 
 const CompanyList = (props: Props) => {
@@ -49,15 +46,15 @@ const CompanyList = (props: Props) => {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [showDialog, setShowDialog] = useState(false);
-  const { companies } = useAppSelector((state:RootState)=>state.company)
+  const { companies } = useAppSelector((state: RootState) => state.company);
   const history = useHistory();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
-  useEffect(()=>{
-     const controller = new AbortController();
-     dispatch(listCompanies())
-     return controller.abort()
-  },[])
+  useEffect(() => {
+    const controller = new AbortController();
+    dispatch(listCompanies());
+    return controller.abort();
+  }, [dispatch]);
 
   const handleRequestSort = (event: any, property: any) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -111,6 +108,13 @@ const CompanyList = (props: Props) => {
 
   const isUserNotFound = filteredUsers.length === 0;
 
+  const handleMenuItemClick = (id: number, type: string) => {
+    if (type === config.menuType.edit) {
+    }
+    if (type === config.menuType.delete) {
+    }
+  };
+
   return (
     <Page title="Employee">
       <Container>
@@ -152,7 +156,8 @@ const CompanyList = (props: Props) => {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row: any) => {
-                      const { id, name,address,email, phone, date_of_establishment,remarks } = row;
+                      const { id, name, address, email, phone, date_of_establishment, remarks } =
+                        row;
                       const isItemSelected = selected.indexOf(name as never) !== -1;
 
                       return (
@@ -185,7 +190,7 @@ const CompanyList = (props: Props) => {
                           <TableCell align="left">{date_of_establishment}</TableCell>
                           <TableCell align="left">{remarks}</TableCell>
                           <TableCell align="right">
-                            <MoreMenu />
+                            <MoreMenu onClick={handleMenuItemClick} id={id} />
                           </TableCell>
                         </TableRow>
                       );
