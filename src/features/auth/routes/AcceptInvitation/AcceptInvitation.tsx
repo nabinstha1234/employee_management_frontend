@@ -4,7 +4,8 @@ import { Container, Stack, Typography, Alert } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import { UnAuthLayout } from 'components/organisms';
 import { useAppDispatch } from 'app/hooks';
-import { acceptToken, login } from '../../Api/auth';
+import { acceptToken } from '../../Api/auth';
+import AuthService from 'features/auth/Api/authService';
 
 import { ContentStyle, RootStyle } from '../Login/styles';
 import toast from 'react-hot-toast';
@@ -28,15 +29,15 @@ const AcceptInvitation = (props: Props) => {
         setLoading(false);
         setSuccess(true);
         const { email, temp_password } = response?.data;
-        dispatch(
-          login({
-            email,
-            password: temp_password,
-          })
-        )
-          .unwrap()
+
+        AuthService.login({
+          email,
+          password: temp_password,
+        })
           .then(() => {
-            history.push('/');
+            history.push('/password-change', {
+              temp_password,
+            });
           })
           .catch(() => {
             toast.error('Something went wrong');
