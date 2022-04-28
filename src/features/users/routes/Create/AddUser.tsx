@@ -70,7 +70,15 @@ const AddUser = ({ setShowDialog, defaultValues }: Props) => {
 
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput) => {
     setIsSubmitting(true);
-    dispatch(createUser(data))
+    const inputData = {
+      name: data?.middlename
+        ? `${data.firstname} ${data.middlename} ${data.lastname}`
+        : `${data.firstname} ${data.lastname}`,
+      email: data.email,
+      role: data.role,
+      company: data.company,
+    };
+    dispatch(createUser(inputData))
       .unwrap()
       .then((response) => {
         toast.success('User Created Successfully');
