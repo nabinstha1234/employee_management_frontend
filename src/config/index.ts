@@ -5,7 +5,7 @@
     roles: {
         SuperAdmin:"SuperAdmin",
         Admin:"Admin",
-        Employee:"Employee"
+        Employee:"GeneralAdmin"
     },
     paging: {
       perPage: 25,
