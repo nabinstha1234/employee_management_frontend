@@ -14,6 +14,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import { camelCase, startCase } from 'lodash';
 
 import { RootState } from 'app/store';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
@@ -110,11 +111,9 @@ const UsersList = (props: Props) => {
   const handleMenuItemClick = (id: number, type: string) => {
     if (type === config.menuType.edit) {
       const user = users.find((item: any) => item.id === id);
-      const { firstname, middlename, lastname, email, role, company } = user;
+      const { name, email, role, company } = user;
       setDefaultValues({
-        firstname,
-        middlename,
-        lastname,
+        name,
         email,
         role,
         company,
@@ -167,8 +166,8 @@ const UsersList = (props: Props) => {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row: any) => {
-                      const { id, firstname, lastname, middlename, lastlogin, email, role } = row;
-                      const isItemSelected = selected.indexOf(firstname as never) !== -1;
+                      const { id, name, lastlogin, email, role } = row;
+                      const isItemSelected = selected.indexOf(name as never) !== -1;
 
                       return (
                         <TableRow
@@ -182,14 +181,14 @@ const UsersList = (props: Props) => {
                           <TableCell padding="checkbox">
                             <Checkbox
                               checked={isItemSelected}
-                              onChange={(event) => handleClick(event, firstname)}
+                              onChange={(event) => handleClick(event, name)}
                             />
                           </TableCell>
                           <TableCell align="left">{id}</TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
                               <Typography variant="subtitle2" noWrap>
-                                {firstname} {middlename} {lastname}
+                                {startCase(camelCase(name))}
                               </Typography>
                             </Stack>
                           </TableCell>

@@ -40,7 +40,10 @@ export const authSlice=createSlice({
             state.error=null;
         })
         builder.addCase(getCurrentUser.fulfilled,(state:IAuthState, action)=>{
-            state.userResponse= action.payload.data;
+            state.userResponse= {
+                ...action.payload.data,
+                role:action.payload.data.role.role_name
+            };
             state.loading= false;
             state.error=null;
         })

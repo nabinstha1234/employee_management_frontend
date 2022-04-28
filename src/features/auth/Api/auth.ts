@@ -22,3 +22,8 @@ export const changePassword= createAsyncThunk("auth/change-password", async (arg
     const response = await AuthService.changePassword(args);
     return response
 })
+
+export const acceptToken = createAsyncThunk("auth/accept-token", async (args:any)=>{
+    const response = await AuthService.acceptToken(args);
+    return response
+})

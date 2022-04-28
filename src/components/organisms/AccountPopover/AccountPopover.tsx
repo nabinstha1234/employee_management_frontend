@@ -1,16 +1,16 @@
 import { useState, useRef } from 'react';
 import { Button, Box, Divider, MenuItem, Typography, Avatar, IconButton } from '@mui/material';
-import { Link as RouterLink,useHistory } from 'react-router-dom';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { alpha } from '@mui/material/styles';
-import {useAppSelector} from "app/hooks"
-import {RootState} from "app/store";
-import {upperFirst} from 'lodash'
+import { useAppSelector } from 'app/hooks';
+import { RootState } from 'app/store';
+import { camelCase, startCase } from 'lodash';
 
 import { ReactIcon, MenuPopOver } from 'components/molecules';
-import {useAppDispatch} from "app/hooks";
-import {removeToken} from "utils/token";
-import config from "config"
-import {logout} from "features/auth/Api/auth";
+import { useAppDispatch } from 'app/hooks';
+import { removeToken } from 'utils/token';
+import config from 'config';
+import { logout } from 'features/auth/Api/auth';
 
 type Props = {};
 
@@ -35,11 +35,11 @@ const MENU_OPTIONS = [
 const AccountPopover = (props: Props) => {
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
-  const {userResponse} = useAppSelector((state:RootState)=>state.auth);
+  const { userResponse } = useAppSelector((state: RootState) => state.auth);
 
-  const history = useHistory()
+  const history = useHistory();
 
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   const handleOpen = () => {
     setOpen(true);
@@ -48,12 +48,14 @@ const AccountPopover = (props: Props) => {
     setOpen(false);
   };
 
-  const handleLogout=()=>{
-    dispatch(logout()).unwrap().then(()=>{
-      removeToken({name:config.tokenName})
-       history.push("/login")
-    })
-  }
+  const handleLogout = () => {
+    dispatch(logout())
+      .unwrap()
+      .then(() => {
+        removeToken({ name: config.tokenName });
+        history.push('/login');
+      });
+  };
   return (
     <>
       <IconButton
@@ -87,7 +89,7 @@ const AccountPopover = (props: Props) => {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle1" noWrap>
-            {upperFirst(userResponse.firstname)} {upperFirst(userResponse.lastname)}
+            {startCase(camelCase(userResponse?.name))}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {userResponse.email}
@@ -118,7 +120,7 @@ const AccountPopover = (props: Props) => {
         ))}
 
         <Box sx={{ p: 2, pt: 1.5 }}>
-          <Button fullWidth color="inherit" onClick={()=> handleLogout()} variant="outlined">
+          <Button fullWidth color="inherit" onClick={() => handleLogout()} variant="outlined">
             Logout
           </Button>
         </Box>

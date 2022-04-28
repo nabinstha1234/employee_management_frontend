@@ -30,4 +30,10 @@ export default class AuthService {
         })
     }
 
+    static acceptToken(args: any) {
+        return http.post({
+            endpoint: `/invite/accept/${args.token}`,
+        })
+    }
+
 }

@@ -8,6 +8,7 @@ const {CompanyList} = lazyImport(()=> import("features/company"),"CompanyList");
 const {AddCompany} = lazyImport(()=> import("features/company"),"AddCompany");
 const {UsersList} = lazyImport(()=> import("features/users"),"UsersList");
 const {ChangePassword} = lazyImport(()=> import("features/auth"),"ChangePassword");
+const {AcceptInvitation} = lazyImport(()=> import("features/auth"),"AcceptInvitation");
 
 const routes = {
   home: {
@@ -37,6 +38,10 @@ const routes = {
   passwordChange:{
     path:"/password-change",
     component:ChangePassword
+  },
+  acceptInvitation:{
+    path:"/invite/verify/:token",
+    component:AcceptInvitation
   },
   page404:{
     path:"*",

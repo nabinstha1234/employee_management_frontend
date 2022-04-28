@@ -47,6 +47,7 @@ const AddCompany = (props: Props) => {
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput) => {
     setIsSubmitting(true);
     dispatch(createCompany(data))
+      .unwrap()
       .then((response) => {
         toast.success('Company Created Successfully');
         history.push(routes.company.path);
